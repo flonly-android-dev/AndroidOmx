@@ -1,0 +1,84 @@
+apply plugin: 'com.android.model.application'
+
+model {
+    android {
+        compileSdkVersion = 23
+        buildToolsVersion = "23.0.2"
+
+        defaultConfig.with {
+            applicationId = "com.example.flonly.androidomx"
+            minSdkVersion.apiLevel = 16
+            targetSdkVersion.apiLevel = 16
+//            minSdkVersion = 15
+//            targetSdkVersion = 16
+//            versionCode = 1
+//            versionName = "1.0"
+
+        }
+
+//        sourceSets {
+//            main {
+//                //jni.srcDirs=['src/main/jni']
+//                jniLibs.srcDirs 'libs'
+//            }
+//        }
+
+    }
+
+    compileOptions.with {
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
+    }
+
+    android.ndk {
+        moduleName = "mediacore"
+        //ldLibs  "log", "z", "m"
+        //abiFilters  'armeabi', 'armeabi-v7a', 'x86'
+
+        cppFlags.add("-I${file("src/main/jni")}".toString())
+        cppFlags.add("-I${file("src/main/jni/include")}".toString())
+        cppFlags.add("-I${file("src/main/jni/include/omx")}".toString())
+        cppFlags.add("-fexceptions")
+        cppFlags.add("-fpermissive")
+        cppFlags.add("-D_ANDROID");
+        cppFlags.add("-D__STDC_CONSTANT_MACROS");
+        cppFlags.add("-DANDROID_NDK");
+
+        CFlags.add("-I${file("src/main/jni")}".toString())
+        CFlags.add("-I${file("src/main/jni/include")}".toString())
+        CFlags.add("-I${file("src/main/jni/include/omx")}".toString())
+        CFlags.add("-D_ANDROID");
+        CFlags.add("-D__STDC_CONSTANT_MACROS");
+        CFlags.add("-DANDROID_NDK");
+
+        ldFlags.add("-L${file("src/main/jni/lib")}".toString())
+        ldLibs.addAll(["android", "log"])
+        ldLibs.addAll(["OmxCore"])
+        stl = "stlport_static"
+    }
+
+    android.buildTypes {
+        release {
+            minifyEnabled = false
+            //proguardFiles = getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles.add(file('proguard-rules.txt'))
+        }
+    }
+
+    android.productFlavors {
+//        arm {
+//            ndk {
+//                abiFilter = "armeabi-v7a"
+//            }
+//        }
+        create("arm") {
+            ndk.abiFilters.add("armeabi")
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+}
