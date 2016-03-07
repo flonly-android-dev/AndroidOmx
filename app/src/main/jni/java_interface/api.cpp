@@ -15,9 +15,11 @@
  */
 //com.example.flonly.androidomx
 //Java_com_example_hellojni_HelloJni_stringFromJNI
-void
+extern "C" {
+JNIEXPORT void JNICALL
 Java_com_example_flonly_androidomx_MainActivity_testomx(JNIEnv *env,
-                                     jobject thiz) {
+                                                        jobject thiz) {
     OmxMaster om;
     om.list_component();
+}
 }
