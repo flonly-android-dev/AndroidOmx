@@ -41,7 +41,7 @@ model {
         cppFlags.add("-I${file("src/main/jni/include/frameworks/av")}".toString())
         cppFlags.add("-I${file("src/main/jni/include/frameworks/base")}".toString())
         cppFlags.add("-I${file("src/main/jni/include/system/core")}".toString())
-        cppFlags.add("-I${file("src/main/jni/include/omx")}".toString())
+        cppFlags.add("-I${file("src/main/jni/include/frameworks/native/media/openmax")}".toString())
         cppFlags.add("-fexceptions")
         cppFlags.add("-fpermissive")
         cppFlags.add("-D_ANDROID");
@@ -54,7 +54,8 @@ model {
         CFlags.add("-I${file("src/main/jni/include/frameworks/av")}".toString())
         CFlags.add("-I${file("src/main/jni/include/frameworks/base")}".toString())
         CFlags.add("-I${file("src/main/jni/include/system/core")}".toString())
-        CFlags.add("-I${file("src/main/jni/include/omx")}".toString())
+        //CFlags.add("-I${file("src/main/jni/include/omx")}".toString())
+        CFlags.add("-I${file("src/main/jni/include/frameworks/native/media/openmax")}".toString())
         CFlags.add("-D_ANDROID");
         CFlags.add("-D__STDC_CONSTANT_MACROS");
         CFlags.add("-DANDROID_NDK");

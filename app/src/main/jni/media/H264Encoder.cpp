@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <media/IOMX.h>
 #include <binder/MemoryDealer.h>
+#include <OMX_Component.h>
 #include "H264Encoder.h"
 #include "utils/mlog.h"
 
