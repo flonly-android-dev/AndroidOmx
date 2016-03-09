@@ -228,7 +228,7 @@ typedef OMX_ERRORTYPE (* OMX_COMPONENTINITTYPE)(OMX_IN  OMX_HANDLETYPE hComponen
 
 typedef struct OMX_COMPONENTREGISTERTYPE
 {
-  const char          * pName;       /* Component name, 128 byte limit (including ‘\0’) applies */
+  const char          * pName;       /* Component name, 128 byte limit (including ï¿½\0ï¿½) applies */
   OMX_COMPONENTINITTYPE pInitialize; /* Component instance initialization function */
 } OMX_COMPONENTREGISTERTYPE;
 
@@ -290,13 +290,13 @@ typedef struct OMX_PRIORITYMGMTTYPE {
  * the starttime will occur with the target frame (with any other
  * required frames required to reconstruct the target intervening).
  *
- * The STARTTIME flag is directly associated with the buffer’s 
- * timestamp – thus its association to buffer data and its 
- * propagation is identical to the timestamp’s.
+ * The STARTTIME flag is directly associated with the bufferï¿½s 
+ * timestamp ï¿½ thus its association to buffer data and its 
+ * propagation is identical to the timestampï¿½s.
  *
  * When a Sync Component client receives a buffer with the 
  * STARTTIME flag it shall perform a SetConfig on its sync port 
- * using OMX_ConfigTimeClientStartTime and passing the buffer’s
+ * using OMX_ConfigTimeClientStartTime and passing the bufferï¿½s
  * timestamp.
  */
 
@@ -310,7 +310,7 @@ typedef struct OMX_PRIORITYMGMTTYPE {
  * flag on any buffer that should shall be decoded but should not be
  * displayed. This flag is used, for instance, when a source seeks to 
  * a target interframe that requires the decode of frames preceding the 
- * target to facilitate the target’s reconstruction. In this case the 
+ * target to facilitate the targetï¿½s reconstruction. In this case the 
  * source would emit the frames preceding the target downstream 
  * but mark them as decode only.
  *
@@ -1189,7 +1189,6 @@ OMX_API OMX_ERRORTYPE OMX_APIENTRY OMX_SetupTunnel(
     OMX_IN  OMX_U32 nPortOutput,
     OMX_IN  OMX_HANDLETYPE hInput,
     OMX_IN  OMX_U32 nPortInput);
-
 
 #ifdef __cplusplus
 }

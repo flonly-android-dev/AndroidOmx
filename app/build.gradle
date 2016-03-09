@@ -37,6 +37,10 @@ model {
 
         cppFlags.add("-I${file("src/main/jni")}".toString())
         cppFlags.add("-I${file("src/main/jni/include")}".toString())
+        cppFlags.add("-I${file("src/main/jni/include/frameworks/native")}".toString())
+        cppFlags.add("-I${file("src/main/jni/include/frameworks/av")}".toString())
+        cppFlags.add("-I${file("src/main/jni/include/frameworks/base")}".toString())
+        cppFlags.add("-I${file("src/main/jni/include/system/core")}".toString())
         cppFlags.add("-I${file("src/main/jni/include/omx")}".toString())
         cppFlags.add("-fexceptions")
         cppFlags.add("-fpermissive")
@@ -46,6 +50,10 @@ model {
 
         CFlags.add("-I${file("src/main/jni")}".toString())
         CFlags.add("-I${file("src/main/jni/include")}".toString())
+        CFlags.add("-I${file("src/main/jni/include/frameworks/native")}".toString())
+        CFlags.add("-I${file("src/main/jni/include/frameworks/av")}".toString())
+        CFlags.add("-I${file("src/main/jni/include/frameworks/base")}".toString())
+        CFlags.add("-I${file("src/main/jni/include/system/core")}".toString())
         CFlags.add("-I${file("src/main/jni/include/omx")}".toString())
         CFlags.add("-D_ANDROID");
         CFlags.add("-D__STDC_CONSTANT_MACROS");
@@ -53,7 +61,7 @@ model {
 
         ldFlags.add("-L${file("src/main/jni/lib")}".toString())
         ldLibs.addAll(["android", "log"])
-        ldLibs.addAll(["OmxCore"])
+        ldLibs.addAll(["OmxCore","binder","media","stagefright","utils"])
         stl = "stlport_static"
     }
 

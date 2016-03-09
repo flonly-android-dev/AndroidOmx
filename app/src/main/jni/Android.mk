@@ -14,6 +14,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/omx
 LOCAL_MODULE    := mediacore
 LOCAL_SHARED_LIBRARIES := libOmxCore
 LOCAL_SRC_FILES := omx/OmxMaster.cpp \
+     media/H264Encoder.cpp    \
      java_interface/api.cpp
 LOCAL_LDLIBS := -llog
 
