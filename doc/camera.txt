@@ -1,0 +1,14 @@
+
+
+
+1.sdk url
+    http://developer.android.com/intl/zh-cn/reference/android/hardware/Camera.html
+
+2.manifest 添加权限:
+    <uses-permission android:name="android.permission.CAMERA" />
+     <uses-feature android:name="android.hardware.camera" />
+     <uses-feature android:name="android.hardware.camera.autofocus" />
+     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+3.例子:使用intent 调用已有程序进行截图
