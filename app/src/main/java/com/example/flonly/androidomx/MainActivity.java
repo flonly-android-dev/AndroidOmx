@@ -1,6 +1,9 @@
 package com.example.flonly.androidomx;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public SurfaceHolder mSurfaceHolder;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
+    private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE_SELF = 300;
     private Uri fileUri;
 
     public native void testomx();
@@ -57,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initPlayerView(){
 
-
     }
 
     public void captureImageFromOther(View v){
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE); // create a file to save the image
-        Log.d("file url=",fileUri.toString());
+        Log.d("file url=", fileUri.toString());
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
         // start the image capture Intent
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -136,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // Image capture failed, advise user
             }
+            return;
         }
 
         if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
@@ -148,6 +152,47 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // Video capture failed, advise user
             }
+            return;
         }
+
+        if(requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE_SELF){
+            if (resultCode == RESULT_OK) {
+                // Video captured and saved to fileUri specified in the Intent
+                Toast.makeText(this, "intent data:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // User cancelled the video capture
+            } else {
+                // Video capture failed, advise user
+            }
+            return;
+        }
+
     }
+
+    public void testCamera(View v){
+
+        Intent intent = new Intent(this, CameraActivity.class);
+        startActivity(intent);
+        startActivityForResult(intent,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE_SELF);
+
+        //1.Detect and Access Camera - Create code to check for the existence of cameras and request
+        // access.
+        //checkCameraHardware();
+        //2.Create a Preview Class - Create a camera preview class that extends SurfaceView and
+        // implements the SurfaceHolder interface. This class previews the live images from the camera.
+
+        //3.Build a Preview Layout - Once you have the camera preview class, create a view layout
+        // that incorporates the preview and the user interface controls you want.
+
+        //4.Setup Listeners for Capture - Connect listeners for your interface controls to start
+        // image or video capture in response to user actions, such as pressing a button.
+
+        //5.Capture and Save Files - Setup the code for capturing pictures or videos and saving
+        // the output.
+
+        //6.Release the Camera - After using the camera, your application must properly release
+        // it for use by other applications.
+    }
+
 }

@@ -12,3 +12,20 @@
      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 3.例子:使用intent 调用已有程序进行截图
+
+
+4.Build by self
+    Detect and Access Camera -
+        Create code to check for the existence of cameras and request access.
+    Create a Preview Class -
+        Create a camera preview class that extends SurfaceView and implements the SurfaceHolder interface. This class previews the live images from the camera.
+    Build a Preview Layout -
+        Once you have the camera preview class, create a view layout that incorporates the preview and the user interface controls you want.
+    Setup Listeners for Capture -
+        Connect listeners for your interface controls to start image or video capture in response to user actions, such as pressing a button.
+    Capture and Save Files -
+        Setup the code for capturing pictures or videos and saving the output.
+    Release the Camera -
+        After using the camera, your application must properly release it for use by other applications.
+
+5.
