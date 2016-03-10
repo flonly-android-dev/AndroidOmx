@@ -9,6 +9,8 @@
 #include <media/stagefright/OMXCodec.h>
 #include <media/stagefright/OMXClient.h>
 #include <media/stagefright/MetaData.h>
+#include <media/stagefright/MPEG4Writer.h>
+#include <utils/Errors.h>
 
 #include "AVSource.h"
 #include "thread/thread.h"
@@ -33,18 +35,23 @@ public:
     VideoCodec();
     int init();
     void test();
+    status_t setupEncMeta();
+    sp<MetaData> getEncMeta();
     ~VideoCodec();
 
 protected:
     static void* thread_main(void* param);
+    sp<MetaData> mEncMeta;
     void encode_video();
 private:
-     OMXClient mClient;
+    OMXClient mClient;
     //sp<ANativeWindow> mNativeWindow;
     sp<MediaSource> mVideoEncoder;
-    AVSource* mVideoSource;
+    sp<MPEG4Writer> mMp4Write;
 
+    sp<MediaSource> mVideoSource;
     CPThread _thread_encode_video;
+    struct VideoInfo mVideoInfo;
 };
 
 #endif //ANDROIDOMX_VIDEOCODEC_H

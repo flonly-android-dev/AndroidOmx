@@ -7,66 +7,121 @@
 #include <media/openmax/OMX_IVCommon.h>
 #include <utils/mlog.h>
 #include "AVSource.h"
+#include "media/tools.h"
 
-AVSource::AVSource() {
-    mVideoInfo.width = 640;
-    mVideoInfo.height = 480;
-    mVideoInfo.fps = 30;
-    mVideoInfo.bitrate = 800 * 1024;
-    mVideoInfo.iframe_interval = 3;
-    mVideoInfo.color_format = OMX_COLOR_FormatYUV422Planar;
+AVSource::AVSource(struct VideoInfo vi) {
+    mVideoInfo = vi;
 
     mFormat = new MetaData;
     //mFormat->setCString(kKeyMIMEType, MEDIA_MIMETYPE_VIDEO_AVC);
-    mFormat->setCString(kKeyMIMEType, MEDIA_MIMETYPE_VIDEO_AVC);
+    mFormat->setCString(kKeyMIMEType, MEDIA_MIMETYPE_VIDEO_RAW);
     mFormat->setInt32(kKeyWidth, mVideoInfo.width);
     mFormat->setInt32(kKeyHeight, mVideoInfo.height);
-    mFormat->setInt32(kKeyFrameRate, mVideoInfo.fps);
-    mFormat->setInt32(kKeyBitRate, mVideoInfo.bitrate);
-    mFormat->setInt32(kKeyIFramesInterval, mVideoInfo.iframe_interval);
-    mFormat->setInt32(kKeyStride, mVideoInfo.width);
-    mFormat->setInt32(kKeySliceHeight, mVideoInfo.height);
-    //mFormat->setInt32(kKeyColorFormat, OMX_COLOR_FormatYUV420Planar);
-    //mFormat->setInt32(kKeyColorFormat, OMX_COLOR_FormatYUV420PackedPlanar);
-    mFormat->setInt32(kKeyColorFormat, OMX_COLOR_FormatYUV420SemiPlanar);
+    mFormat->setInt32(kKeyColorFormat, mVideoInfo.color_format);
 
-    mYuvSize = mVideoInfo.width * mVideoInfo.height * 3 / 2 + 1;
-    mYuv420 = new char[mYuvSize];
+    mYuvSize = mVideoInfo.width * mVideoInfo.height * 3 / 2;
+    LOGD("mYuvSize = %d",mYuvSize);
+    mYuv420Blue = new char[mYuvSize];
+    mYuv420Red  = new char[mYuvSize];
+    mGroup.add_buffer(new MediaBuffer(mYuvSize));
     mFrameCount = 0;
+    createYuvData();
 }
 
 AVSource::~AVSource() {
-    delete mYuv420;
+    //delete mYuv420;
 }
 
 status_t AVSource::read(MediaBuffer **buffer, const MediaSource::ReadOptions *options) {
-    updateSouce();
+    int videoLen = 100;//seconds
+    if(mFrameCount >= mVideoInfo.fps * videoLen){
+        LOGD("AVSource ERROR_END_OF_STREAM");
+        return ERROR_END_OF_STREAM;
+    }
+    LOGD("AVSource :%s : %d",__FUNCTION__,__LINE__);
+    status_t ret = mGroup.acquire_buffer(buffer,false);
+    LOGD("AVSource :%s : %d",__FUNCTION__,__LINE__);
+    if (ret != OK) {
+        LOGE("acquire_buffer failed");
+        return ret;
+    }
 
-    memcpy((*buffer)->data(), mYuv420, mYuvSize);
+#if 0
+    // iterate through solid planes of color.
+    static unsigned char x = 0x60;
+    memset((*buffer)->data(), x, mSize);
+    x = x >= 0xa0 ? 0x60 : x + 1;
+#endif
+
+    updateSouce((*buffer)->data());
     (*buffer)->set_range(0, mYuvSize);
     (*buffer)->meta_data()->clear();
     //(*buffer)->meta_data()->setInt32(kKeyIsSyncFrame, packet.flags & AV_PKT_FLAG_KEY);
     (*buffer)->meta_data()->setInt64(kKeyTime, mFrameCount * 1000000 / mVideoInfo.fps);
 
+    LOGE(" == AVSource read OK");
+    return OK;
 }
 
-void AVSource::updateSouce() {
+void AVSource::createYuvData(){
+
+    uint32_t iWH = mVideoInfo.width * mVideoInfo.height;
+    char *rgb24 = new char[iWH*3];
+    //for red
+    for(int i=0; i < iWH; i++){
+//        rgb24[i*3] = random()%255;
+//        rgb24[i*3+1] = random()%255;
+//        rgb24[i*3+2] = random()%255;
+        rgb24[i*3] = 255;
+        rgb24[i*3+1] = 0;
+        rgb24[i*3+2] = 0;
+    }
+    RGB24ToYUV420(mVideoInfo.width,mVideoInfo.height,(BYTE*)rgb24,(BYTE*)mYuv420Red);
+
+    for(int i=0; i < iWH; i++){
+        rgb24[i*3] = 0;
+        rgb24[i*3+1] = 0;
+        rgb24[i*3+2] = 255;
+    }
+    RGB24ToYUV420(mVideoInfo.width,mVideoInfo.height,(BYTE*)rgb24,(BYTE*)mYuv420Blue);
+
+}
+
+void AVSource::updateSouce(char *dst) {
+    LOGD("enter AVSource::updateSouce");
     //TODO update yuvdata;
     static struct timeval tv, ctv;
+    static uint32_t maxtime = 0;
+    static uint32_t avgtime = 0;
     if (mFrameCount == 0) {
         gettimeofday(&tv, NULL);
     } else {
         gettimeofday(&ctv, NULL);
-        uint64_t time_wait = (ctv.tv_sec * 1000000 + ctv.tv_usec) - (tv.tv_sec * 1000000 + tv.tv_usec) -
+        int32_t time_wait = (ctv.tv_sec * 1000000 + ctv.tv_usec) - (tv.tv_sec * 1000000 + tv.tv_usec) -
                              (1000000 / mVideoInfo.fps);
+        avgtime = (time_wait + 1000000 / mVideoInfo.fps)*0.2 + avgtime*0.8;
+        if(time_wait + 1000000 / mVideoInfo.fps > maxtime){
+            maxtime = time_wait + 1000000 / mVideoInfo.fps;
+            //LOGD("time cost between updateSouce avgtime=%d, maxtime= %d",avgtime, maxtime);
+        }
+        //LOGD("time cost between updateSouce = %d", time_wait + 1000000 / mVideoInfo.fps);
         if (time_wait > 0) {
+            LOGD("sleep time %d",time_wait);
             usleep(time_wait);
         } else {
-            LOGE("encode cost too much time with more %dus",time_wait);
+            //LOGE("encode cost too much time with more %dus",time_wait);
         }
         tv = ctv;
     }
     LOGD("============ updateSouce ============ ");
+    int count = (mFrameCount + 1) % (mVideoInfo.fps/2);
+    //if(count < mVideoInfo.fps/4){
+    if(mFrameCount%2==1){
+        LOGD("time cost between updateSouce avgtime=%d, maxtime= %d",avgtime, maxtime);
+        memcpy(dst,mYuv420Red,mYuvSize);
+    }else{
+        memcpy(dst,mYuv420Blue,mYuvSize);
+    }
     mFrameCount++;
 }
 

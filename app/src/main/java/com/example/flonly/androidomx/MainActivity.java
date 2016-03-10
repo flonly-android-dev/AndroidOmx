@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         initPlayerView();
 
-        testomx();
+        //testomx();
     }
 
 

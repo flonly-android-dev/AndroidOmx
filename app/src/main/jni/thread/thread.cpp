@@ -25,7 +25,10 @@ int CPThread::Start(const char* thread_name)
 {
 	if(thread_name != NULL)
 	{
-		_name = (char*)thread_name;
+        int len = strlen(thread_name) + 1;
+        _name = new char[len];
+        memcpy(_name,thread_name,len-1);
+        _name[len] = '\0';
 	}
 
     pthread_attr_t attr;
@@ -38,7 +41,7 @@ int CPThread::Start(const char* thread_name)
         Stop();
         return -1;
     }
-    prctl(PR_SET_NAME, thread_name);
+    prctl(PR_SET_NAME, _name);
 
     return 0;
 }
@@ -75,19 +78,23 @@ void CPThread::Process()
 	LOGE("thread=%s,tid=%d,function=%s, line = %d", _name, gettid(), __FUNCTION__, __LINE__);
 	JNIEnv* env;
 	jint ret = gJavaVM->AttachCurrentThread(&env, NULL);
+    LOGD("CPThread :: %s : %d",__FUNCTION__,__LINE__);
 	if (ret || env == NULL) {
 		LOGE("function=%s, line = %d", __FUNCTION__, __LINE__);
 		return;
 	}
-
+    LOGD("CPThread :: %s : %d",__FUNCTION__,__LINE__);
     while (_run)
     {
+        LOGD("CPThread :: %s : %d",__FUNCTION__,__LINE__);
         _sem.Pend();
+        LOGD("CPThread :: %s : %d",__FUNCTION__,__LINE__);
         if (!_run) {
             break;
         }
         if (_worker)
         {
+            LOGD("CPThread :: %s : %d",__FUNCTION__,__LINE__);
             _worker(_user);
         }
     }
