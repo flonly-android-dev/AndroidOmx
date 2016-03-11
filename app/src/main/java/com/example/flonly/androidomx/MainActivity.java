@@ -195,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         // it for use by other applications.
     }
 
-
     public void testOpenGLES(View v){
         Intent glIntent = new Intent(this,OpenGLES20Activity.class);
         startActivity(glIntent);

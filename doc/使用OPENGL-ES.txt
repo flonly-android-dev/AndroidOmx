@@ -15,11 +15,29 @@
     3.1 Initialize Shapes
     3.2 Draw a Shape
 
+4.Applying Projection and Camera Views
+    4.1 Define a Projection
+    4.2 Define a Camera View
+    4.3 Apply Projection and Camera Transformations
+
+5.Adding Motion
+    5.1 Rotate a Shape
+    5.2 Enable Continuous Rendering
+
+6.Responding to Touch Events
+    http://developer.android.com/intl/zh-cn/training/graphics/opengl/touch.html#listener
+    6.1 Setup a Touch Listener
+    6.2 Expose the Rotation Angle
+    6.3 Apply Rotation
 
 
-=====================
+
+
+===============================================================
 其他教程
 1.Android OpenGL ES 开发教程 从入门到精通
     http://blog.csdn.net/mapdigit/article/details/7526556
 
-2.
+
+================================================================
+camera --> openGL ---> mediacodec --> native

@@ -15,9 +15,10 @@ public class Triangle {
     private FloatBuffer vertexBuffer;
 
     private final String vertexShaderCode =
+            "uniform mat4 uMVPMatrix;" +
             "attribute vec4 vPosition;" +
                     "void main() {" +
-                    "  gl_Position = vPosition;" +
+                    "  gl_Position = uMVPMatrix * vPosition;" +
                     "}";
 
     private final String fragmentShaderCode =
@@ -27,7 +28,8 @@ public class Triangle {
                     "  gl_FragColor = vColor;" +
                     "}";
 
-
+    // Use to access and set the view transformation
+    private int mMVPMatrixHandle;
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
@@ -81,8 +83,7 @@ public class Triangle {
         GLES20.glLinkProgram(mProgram);
     }
 
-
-    public void draw() {
+    public void draw(float[] mvpMatrix) {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram);
 
@@ -96,6 +97,12 @@ public class Triangle {
         GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
+
+        // get handle to shape's transformation matrix
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+
+        // Pass the projection and view transformation to the shader
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
         // get handle to fragment shader's vColor member
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
