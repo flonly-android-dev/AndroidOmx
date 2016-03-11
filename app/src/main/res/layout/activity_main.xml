@@ -46,4 +46,14 @@
         android:onClick="testOpenGLES"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Camera_GLES"
+        android:id="@+id/camera_gles"
+        android:onClick="testGLCamera"
+        android:layout_below="@+id/btn_startopengles"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true" />
 </RelativeLayout>

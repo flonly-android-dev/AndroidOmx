@@ -3,6 +3,7 @@ package com.example.flonly.androidomx;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 
 /**
  * Created by flonly on 3/11/16.
