@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
-        startActivityForResult(intent,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE_SELF);
+        //startActivityForResult(intent,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE_SELF);
 
         //1.Detect and Access Camera - Create code to check for the existence of cameras and request
         // access.
@@ -193,6 +193,12 @@ public class MainActivity extends AppCompatActivity {
 
         //6.Release the Camera - After using the camera, your application must properly release
         // it for use by other applications.
+    }
+
+
+    public void testOpenGLES(View v){
+        Intent glIntent = new Intent(this,OpenGLES20Activity.class);
+        startActivity(glIntent);
     }
 
 }

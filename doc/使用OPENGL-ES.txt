@@ -1,0 +1,25 @@
+
+1.Building an OpenGL ES Environment
+    http://developer.android.com/intl/zh-cn/training/graphics/opengl/environment.html
+
+    1.1 Declare OpenGL ES Use in the Manifest
+    1.2 Create an Activity for OpenGL ES Graphics
+    1.3 Build a GLSurfaceView Object
+    1.4 Build a Renderer Class
+
+2.Defining Shapes
+    2.1 Define a Triangle
+    2.2 Define a Square
+
+3.Drawing Shapes
+    3.1 Initialize Shapes
+    3.2 Draw a Shape
+
+
+
+=====================
+其他教程
+1.Android OpenGL ES 开发教程 从入门到精通
+    http://blog.csdn.net/mapdigit/article/details/7526556
+
+2.

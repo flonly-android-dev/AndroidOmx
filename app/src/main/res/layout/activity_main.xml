@@ -36,4 +36,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:onClick="testCamera" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OPENGL_ES"
+        android:id="@+id/btn_startopengles"
+        android:layout_below="@+id/btn_selfcamera"
+        android:onClick="testOpenGLES"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" />
 </RelativeLayout>
