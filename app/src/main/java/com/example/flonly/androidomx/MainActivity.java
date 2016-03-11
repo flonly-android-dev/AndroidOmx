@@ -17,6 +17,8 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.flonly.androidomx.CameraOpenGLES.MyCameraActivity;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -197,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void testOpenGLES(View v){
         Intent glIntent = new Intent(this,OpenGLES20Activity.class);
+        startActivity(glIntent);
+    }
+
+    public void testGLCamera(View v){
+        Intent glIntent = new Intent(this,MyCameraActivity.class);
         startActivity(glIntent);
     }
 
