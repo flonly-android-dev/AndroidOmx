@@ -2,10 +2,14 @@ package com.example.flonly.androidomx.CameraOpenGLES;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -14,7 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by flonly on 3/11/16.
  */
 public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
-    private static final String TAG = "Camera2OpenGLES2Mediacodec";
+    private static final String TAG = "GLCamera";
     private Context mContext;
     private SurfaceTexture mSurface;
     private int mTextureID = -1;
@@ -43,18 +47,41 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         mSurface = new SurfaceTexture(mTextureID);
         mSurface.setOnFrameAvailableListener(this);
         mDirectDrawer = new DirectDrawer(mTextureID);
-        mCamera.start(mSurface);
+        mCamera.start(mSurface,null);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        Log.i(TAG, "onSurfaceChanged...");
+        Log.i(TAG, "onSurfaceChanged..." + getRotation());
         GLES20.glViewport(0, 0, width, height);
 //        if(!CameraInterface.getInstance().isPreviewing()){
 //            CameraInterface.getInstance().doStartPreview(mSurface, 1.33f);
 //        }
         mCamera.stop();
-        mCamera.start(mSurface);
+        Camera.Parameters parameters = mCamera.getParameters();
+        int orientation =  mContext.getResources().getConfiguration().getLayoutDirection();
+        if(orientation == Surface.ROTATION_0)
+        {
+            parameters.setPreviewSize(height, width);
+            mCamera.setDisplayOrientation(90);
+        }
+
+        if(orientation == Surface.ROTATION_90)
+        {
+            parameters.setPreviewSize(width, height);
+        }
+
+        if(orientation == Surface.ROTATION_180)
+        {
+            parameters.setPreviewSize(height, width);
+        }
+
+        if(orientation == Surface.ROTATION_270)
+        {
+            parameters.setPreviewSize(width, height);
+            mCamera.setDisplayOrientation(180);
+        }
+        mCamera.start(mSurface,parameters);
     }
 
     @Override

@@ -3,6 +3,9 @@ package com.example.flonly.androidomx.CameraOpenGLES;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import java.io.IOException;
 
@@ -16,14 +19,17 @@ public class MyCamera {
     private Camera.Parameters mCameraParams;
     private Boolean running = false;
 
-    void start(SurfaceTexture surface)
+    void start(SurfaceTexture surface, Camera.Parameters cp)
     {
         Log.v(LOG_TAG, "Starting Camera");
 
         mCamera = Camera.open(0);
         mCameraParams = mCamera.getParameters();
         Log.v(LOG_TAG, mCameraParams.getPreviewSize().width + " x " + mCameraParams.getPreviewSize().height);
-
+        //mCamera.setDisplayOrientation(90);
+        if(cp != null){
+            mCamera.setParameters(cp);
+        }
         try {
             mCamera.setPreviewTexture(surface);
             mCamera.startPreview();
@@ -33,6 +39,8 @@ public class MyCamera {
         }
     }
 
+
+
     void stop()
     {
         if (running) {
@@ -41,5 +49,13 @@ public class MyCamera {
             mCamera.release();
             running = false;
         }
+    }
+
+    public Camera.Parameters getParameters() {
+        return mCamera.getParameters();
+    }
+
+    public void setDisplayOrientation(int i) {
+        mCamera.setDisplayOrientation(i);
     }
 }
