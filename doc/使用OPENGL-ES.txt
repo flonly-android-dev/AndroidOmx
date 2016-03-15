@@ -38,6 +38,10 @@
 2.Cameras on OpenGL ES 2.x - The ModelViewProjection Matrix
     http://blog.db-in.com/cameras-on-opengl-es-2-x/
 
+3.All about OpenGL ES 2.x
+    http://blog.db-in.com/all-about-opengl-es-2-x-part-1/
+
+
 ================================================================
 camera --> openGL ---> mediacodec --> native
 参考资料
@@ -46,3 +50,5 @@ camera --> openGL ---> mediacodec --> native
 
 自己实现:
     1.
+
+

@@ -54,6 +54,7 @@
 
 
         <activity android:name=".CameraOpenGLES.MyCameraActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
             <!--
             android:screenOrientation="landscape">

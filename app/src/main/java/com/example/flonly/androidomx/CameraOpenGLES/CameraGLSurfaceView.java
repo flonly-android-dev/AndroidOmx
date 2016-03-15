@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
@@ -18,7 +19,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by flonly on 3/11/16.
  */
 public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
-    private static final String TAG = "GLCamera";
+    private static final String TAG = "CameraGLSurfaceView";
     private Context mContext;
     private SurfaceTexture mSurface;
     private int mTextureID = -1;
@@ -28,15 +29,28 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
     public CameraGLSurfaceView(Context context, MyCamera camera) {
         super(context);
         mContext = context;
-        mCamera = camera;
+        mCamera = new MyCamera();
         setEGLContextClientVersion(2);
         setRenderer(this);
         setRenderMode(RENDERMODE_WHEN_DIRTY);
     }
 
+    public CameraGLSurfaceView(Context context, AttributeSet attrs) {
+        super(context,attrs);
+        mContext = context;
+        mCamera = new MyCamera();
+        setEGLContextClientVersion(2);
+        setRenderer(this);
+        setRenderMode(RENDERMODE_WHEN_DIRTY);
+    }
+
+//    public void setCamere(MyCamera camera){
+//        mCamera = camera;
+//    }
+
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-        Log.i(TAG, "onFrameAvailable...");
+        //Log.i(TAG, "onFrameAvailable...");
         this.requestRender();
     }
 
@@ -47,51 +61,35 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         mSurface = new SurfaceTexture(mTextureID);
         mSurface.setOnFrameAvailableListener(this);
         mDirectDrawer = new DirectDrawer(mTextureID);
-        mCamera.start(mSurface,null,0);
+        mCamera.start(this,mSurface,mContext);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        Log.i(TAG, "onSurfaceChanged..." + getRotation());
+        Log.d("GL", "GL_RENDERER = " + gl.glGetString(GL10.GL_RENDERER));
+        Log.d("GL", "GL_VENDOR = " + gl.glGetString(GL10.GL_VENDOR));
+        Log.d("GL", "GL_VERSION = " + gl.glGetString(GL10.GL_VERSION));
+        Log.i("GL", "GL_EXTENSIONS = " + gl.glGetString(GL10.GL_EXTENSIONS));
+
+        Log.i(TAG, "onSurfaceChanged..." + getRotation() + " width=" + width + " height=" + height
+                + " layout Direction=" + getLayoutDirection());
         GLES20.glViewport(0, 0, width, height);
+
+//        WindowManager mWindowManager = (WindowManager) mContext.getSystemService(mContext.WINDOW_SERVICE);
+//        Display mDisplay = mWindowManager.getDefaultDisplay();
+//        //int orientation = mContext.getResources().getConfiguration().getLayoutDirection();
+//        int orientation = mDisplay.getRotation();
+        //setRotation(orientation*90);
 //        if(!CameraInterface.getInstance().isPreviewing()){
 //            CameraInterface.getInstance().doStartPreview(mSurface, 1.33f);
 //        }
         mCamera.stop();
-        Camera.Parameters parameters = mCamera.getParameters();
-        int orientation =  mContext.getResources().getConfiguration().getLayoutDirection();
-        int angle = 0;
-        if(orientation == Surface.ROTATION_0)
-        {
-            parameters.setPreviewSize(height, width);
-            angle = 0;
-            //mCamera.setDisplayOrientation(90);
-        }
-
-        if(orientation == Surface.ROTATION_90)
-        {
-            parameters.setPreviewSize(width, height);
-            angle = 90;
-        }
-
-        if(orientation == Surface.ROTATION_180)
-        {
-            parameters.setPreviewSize(height, width);
-            angle = 180;
-        }
-
-        if(orientation == Surface.ROTATION_270)
-        {
-            parameters.setPreviewSize(width, height);
-            angle = 270;
-            //mCamera.setDisplayOrientation(180);
-        }
-        mCamera.start(mSurface,parameters,angle);
+        mCamera.start(this,mSurface,mContext);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        Log.i(TAG, "onDrawFrame...");
+        //Log.i(TAG, "onDrawFrame...");
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         mSurface.updateTexImage();
@@ -105,6 +103,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         super.onPause();
         //CameraInterface.getInstance().doStopCamera();
         //mCamera.stop();
+        mCamera.stop();
     }
 
     private int createTextureID()
