@@ -19,14 +19,15 @@ public class MyCamera {
     private Camera.Parameters mCameraParams;
     private Boolean running = false;
 
-    void start(SurfaceTexture surface, Camera.Parameters cp)
+    void start(SurfaceTexture surface, Camera.Parameters cp, int angle)
     {
         Log.v(LOG_TAG, "Starting Camera");
 
         mCamera = Camera.open(0);
         mCameraParams = mCamera.getParameters();
         Log.v(LOG_TAG, mCameraParams.getPreviewSize().width + " x " + mCameraParams.getPreviewSize().height);
-        //mCamera.setDisplayOrientation(90);
+        mCamera.setDisplayOrientation(angle);
+
         if(cp != null){
             mCamera.setParameters(cp);
         }
