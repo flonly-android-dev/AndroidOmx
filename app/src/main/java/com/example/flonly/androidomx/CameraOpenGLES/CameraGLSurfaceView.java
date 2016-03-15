@@ -47,7 +47,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         mSurface = new SurfaceTexture(mTextureID);
         mSurface.setOnFrameAvailableListener(this);
         mDirectDrawer = new DirectDrawer(mTextureID);
-        mCamera.start(mSurface,null);
+        mCamera.start(mSurface,null,0);
     }
 
     @Override
@@ -60,28 +60,33 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         mCamera.stop();
         Camera.Parameters parameters = mCamera.getParameters();
         int orientation =  mContext.getResources().getConfiguration().getLayoutDirection();
+        int angle = 0;
         if(orientation == Surface.ROTATION_0)
         {
             parameters.setPreviewSize(height, width);
-            mCamera.setDisplayOrientation(90);
+            angle = 0;
+            //mCamera.setDisplayOrientation(90);
         }
 
         if(orientation == Surface.ROTATION_90)
         {
             parameters.setPreviewSize(width, height);
+            angle = 90;
         }
 
         if(orientation == Surface.ROTATION_180)
         {
             parameters.setPreviewSize(height, width);
+            angle = 180;
         }
 
         if(orientation == Surface.ROTATION_270)
         {
             parameters.setPreviewSize(width, height);
-            mCamera.setDisplayOrientation(180);
+            angle = 270;
+            //mCamera.setDisplayOrientation(180);
         }
-        mCamera.start(mSurface,parameters);
+        mCamera.start(mSurface,parameters,angle);
     }
 
     @Override
