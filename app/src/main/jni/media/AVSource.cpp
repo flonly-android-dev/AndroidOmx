@@ -33,7 +33,7 @@ AVSource::~AVSource() {
 }
 
 status_t AVSource::read(MediaBuffer **buffer, const MediaSource::ReadOptions *options) {
-    int videoLen = 100;//seconds
+    int videoLen = 5;//seconds
     if(mFrameCount >= mVideoInfo.fps * videoLen){
         LOGD("AVSource ERROR_END_OF_STREAM");
         return ERROR_END_OF_STREAM;
@@ -76,7 +76,14 @@ void AVSource::createYuvData(){
         rgb24[i*3+1] = 0;
         rgb24[i*3+2] = 0;
     }
+
+    static struct timeval tv, ctv;
+    gettimeofday(&tv,NULL);
+    uint32_t time1 = tv.tv_sec * 1000000 + tv.tv_usec;
     RGB24ToYUV420(mVideoInfo.width,mVideoInfo.height,(BYTE*)rgb24,(BYTE*)mYuv420Red);
+    gettimeofday(&tv,NULL);
+    uint32_t time2 = tv.tv_sec * 1000000 + tv.tv_usec;
+    LOGD("time cost for rgb2yuv420 = %dus",time2-time1);
 
     for(int i=0; i < iWH; i++){
         rgb24[i*3] = 0;
