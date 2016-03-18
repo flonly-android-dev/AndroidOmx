@@ -9,6 +9,8 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
+import com.example.flonly.androidomx.MyGLSurfaceView;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -21,11 +23,11 @@ public class MyCamera {
     private Camera mCamera;
     private Camera.Parameters mCameraParams;
     private Boolean running = false;
-    private GLSurfaceView mSurfaceView;
+    private CameraGLSurfaceView mSurfaceView;
     private Context mContext;
     private  static String TAG = "MyCamera";
 
-    void start(GLSurfaceView surfaceView, SurfaceTexture surface, Context context) {
+    void start(CameraGLSurfaceView surfaceView, SurfaceTexture surface, Context context) {
         mSurfaceView = surfaceView;
         mContext = context;
         Log.v(LOG_TAG, "Starting Camera");
@@ -76,8 +78,8 @@ public class MyCamera {
         Display mDisplay = mWindowManager.getDefaultDisplay();
         //int orientation = mContext.getResources().getConfiguration().getLayoutDirection();
         int orientation = mDisplay.getRotation();
-        int height = mSurfaceView.getHeight();
-        int width = mSurfaceView.getWidth();
+        final int height = parameters.getPreviewSize().height;
+        final int width = parameters.getPreviewSize().width;
         Log.d(MyCamera.class.toString(), "surface view width = " + width + " height=" + height + " orientation = " + orientation);
         if (orientation == Surface.ROTATION_0) {
             //parameters.setPreviewSize(height, width);
@@ -107,6 +109,12 @@ public class MyCamera {
             //parameters.setRotation(180);
             //mSurfaceView.setRotation(270);
         }
+
+        mSurfaceView.queueEvent(new Runnable() {
+            @Override public void run() {
+                mSurfaceView.setCameraPreviewSize(width, height);
+            }
+        });
         //mCamera.setParameters(parameters);
     }
 }

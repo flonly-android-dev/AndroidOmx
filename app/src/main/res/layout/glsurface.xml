@@ -4,7 +4,7 @@
     android:layout_height="fill_parent" android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    android:paddingBottom="0dp" tools:context=".MainActivity">
+    android:paddingBottom="0dp" tools:context=".CameraOpenGLES.MyCameraActivity">
 
 <FrameLayout
     android:layout_width="match_parent"
@@ -25,7 +25,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="startCapture"
-            android:id="@+id/startRecord" />
+            android:id="@+id/startRecord"
+            android:onClick="startRecord"
+            android:capitalize="words"
+            android:contextClickable="false" />
     </LinearLayout>
 </FrameLayout>
 

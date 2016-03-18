@@ -35,24 +35,15 @@ public class MainActivity extends AppCompatActivity {
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE_SELF = 300;
     private Uri fileUri;
 
-    public native void testomx();
-    static {
-        System.loadLibrary("mediacore");
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initPlayerView();
-
-        //testomx();
-
         //captureImageFromOther();
         //captureVideoFromOther();
     }
-
 
     public void setDisplay(SurfaceHolder sh) {
         mSurfaceHolder = sh;
@@ -207,4 +198,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(glIntent);
     }
 
+    public void btn_omxcodec(View v){
+        Intent glIntent = new Intent(this,OmxCodecActivity.class);
+        startActivity(glIntent);
+    }
 }

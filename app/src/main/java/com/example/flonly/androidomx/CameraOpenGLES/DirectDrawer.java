@@ -3,6 +3,7 @@ package com.example.flonly.androidomx.CameraOpenGLES;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -13,6 +14,7 @@ import java.nio.ShortBuffer;
  * Created by flonly on 3/11/16.
  */
 public class DirectDrawer {
+    private final String TAG = MyCameraActivity.TAG;
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "attribute vec2 inputTextureCoordinate;" +
@@ -34,7 +36,7 @@ public class DirectDrawer {
 
     private FloatBuffer vertexBuffer, textureVerticesBuffer;
     private ShortBuffer drawListBuffer;
-    private final int mProgram;
+    private int mProgram;
     private int mPositionHandle;
     private int mTextureCoordHandle;
 
@@ -52,6 +54,13 @@ public class DirectDrawer {
             1.0f,  1.0f,
     };
 
+//    static float squareCoords[] = {
+//            -1.0f, -1.0f,
+//            1.0f, -1.0f,
+//            1.0f,  1.0f,
+//            -1.0f,  1.0f,
+//    };
+
     static float textureVertices[] = {
             0.0f, 1.0f,
             1.0f, 1.0f,
@@ -61,10 +70,9 @@ public class DirectDrawer {
 
     private int texture;
 
-
-    public DirectDrawer(int texture)
+    public DirectDrawer()
     {
-        this.texture = texture;
+        //this.texture = texture;
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(squareCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -94,12 +102,12 @@ public class DirectDrawer {
         GLES20.glLinkProgram(mProgram);                  // creates OpenGL ES program executables
     }
 
-    public void draw(float[] mtx)
+    public void draw(float[] mtx, int textureId)
     {
         GLES20.glUseProgram(mProgram);
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture);
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
 
         // get handle to vertex shader's vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
@@ -113,9 +121,9 @@ public class DirectDrawer {
         mTextureCoordHandle = GLES20.glGetAttribLocation(mProgram, "inputTextureCoordinate");
         GLES20.glEnableVertexAttribArray(mTextureCoordHandle);
 
-        textureVerticesBuffer.clear();
-        textureVerticesBuffer.put( transformTextureCoordinates( textureVertices, mtx ));
-        textureVerticesBuffer.position(0);
+//        textureVerticesBuffer.clear();
+//        textureVerticesBuffer.put(transformTextureCoordinates(textureVertices, mtx));
+//        textureVerticesBuffer.position(0);
         GLES20.glVertexAttribPointer(mTextureCoordHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, textureVerticesBuffer);
 
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
@@ -152,5 +160,20 @@ public class DirectDrawer {
         return result;
     }
 
+    public void setTexSize(int mIncomingWidth, int mIncomingHeight) {
+
+    }
+
+    /**
+     * Releases the program.
+     * <p>
+     * The appropriate EGL context must be current (i.e. the one that was used to create
+     * the program).
+     */
+    public void release() {
+        Log.d(TAG, "deleting program " + mProgram);
+        GLES20.glDeleteProgram(mProgram);
+        mProgram = -1;
+    }
 }
 

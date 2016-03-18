@@ -19,8 +19,20 @@
 //Java_com_example_hellojni_HelloJni_stringFromJNI
 
 JavaVM* gJavaVM;
-
 extern "C" {
+
+JNIEXPORT void JNICALL
+Java_com_example_flonly_androidomx_OmxCodecActivity_testomx(JNIEnv *env, jobject instance) {
+
+    env->GetJavaVM(&gJavaVM);
+    // TODO
+    VideoCodec  vc;
+    vc.init();
+    vc.test();
+
+}
+
+
 JNIEXPORT void JNICALL
 Java_com_example_flonly_androidomx_MainActivity_testomx(JNIEnv *env,
                                                         jobject thiz) {

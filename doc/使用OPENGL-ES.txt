@@ -41,6 +41,20 @@
 3.All about OpenGL ES 2.x
     http://blog.db-in.com/all-about-opengl-es-2-x-part-1/
 
+4.Graphics architecture
+    https://source.android.com/devices/graphics/architecture.html
+    This document describes the essential elements of Android's "system-level" graphics architecture,
+    and how it is used by the application framework and multimedia system. The focus is on how
+    buffers of graphical data move through the system. If you've ever wondered why SurfaceView and
+    TextureView behave the way they do, or how Surface and EGLSurface interact, you've come to the
+    right place.
+
+5.Problem with concurrent audio and video encoding using MediaCodec and MediaMuxer
+
+
+6.  Learn how to develop mobile graphics using OpenGL ES 2
+    http://www.learnopengles.com/android-lesson-one-getting-started/
+
 
 ================================================================
 camera --> openGL ---> mediacodec --> native
